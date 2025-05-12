@@ -92,7 +92,7 @@ INSERT INTO City (id, name) VALUES
 (8, 'Берлин'),
 (9, 'Хургада'),
 (10, 'Шерм-Эль-Шейх'),
-(11, 'Лоч-Анжелес'),
+(11, 'Лоc-Анжелес'),
 (12, 'Лас-Вегас'),
 (13, 'Нью-Йорк'),
 (14, 'Москва'),
@@ -386,3 +386,25 @@ FROM (
     WHERE MATCH(SHORTEST_PATH(Person1(-(fo)->Person2){1,2}))
     AND Person1.name = 'Сьюзен'
 ) Q
+
+SELECT 
+    t1.name AS FirstName,
+    t1.surname AS FirstSurname,
+    t1.id AS FirstID,
+    'Friend' + CAST(t1.id AS NVARCHAR) AS FirstImage,
+    t2.name AS SecondName,
+    t2.surname AS SecondSurname,
+    t2.id AS SecondID,
+    'Friend' + CAST(t2.id AS NVARCHAR) AS SecondImage
+FROM 
+    FriendOf f
+JOIN 
+    Tourist t1 ON f.$from_id = t1.$node_id
+JOIN 
+    Tourist t2 ON f.$to_id = t2.$node_id;
+
+	SELECT C.name AS [Название города], Country.name AS [Название страны], 'Country' + CAST(Country.id AS NVARCHAR) AS [Country image], 'City' AS [City image]
+FROM City AS C
+, situatedIn
+, Country
+WHERE MATCH(C-(situatedIn)->Country)
